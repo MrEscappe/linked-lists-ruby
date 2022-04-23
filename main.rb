@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LinkedList
-  attr_accessor :head, :tail
+  attr_accessor :head
 
   def initialize
     @head = nil
@@ -26,18 +26,6 @@ class LinkedList
     end
   end
 
-  def pop
-    if @head.nil?
-      p 'List is Empty'
-    else
-      current_node = head
-      current_node = current_node.next_node until current_node.next_node.next_node.nil?
-      last_node = current_node.next_node
-      current_node.next_node = nil
-    end
-    last_node
-  end
-
   def size
     return puts 'The List size is Zero' if @head.nil?
 
@@ -50,6 +38,34 @@ class LinkedList
     i
   end
 
+  def at(idx)
+    return 'No match' if idx > to_a.size
+
+    search = @head
+    i = 0
+    until i == idx
+      search = search.next_node
+      i += 1
+    end
+    if search.nil?
+      'No match'
+    else
+      search
+    end
+  end
+
+  def pop
+    if @head.nil?
+      p 'List is Empty'
+    else
+      current_node = head
+      current_node = current_node.next_node until current_node.next_node.next_node.nil?
+      last_node = current_node.next_node
+      current_node.next_node = nil
+    end
+    last_node
+  end
+
   def contains?(value)
     search = @head
 
@@ -59,6 +75,19 @@ class LinkedList
       search = search.next_node
     end
     false
+  end
+
+  def find(value)
+    search = @head
+    i = 0
+    exist = false
+    until search.nil?
+      exist = true if search.value == value
+      search = search.next_node
+
+      i += 1 unless exist == true
+    end
+    return "The value #{value} is on index #{i}" if exist == true
   end
 
   def to_s
@@ -73,6 +102,8 @@ class LinkedList
     puts "#{string}empty node"
   end
 
+  #  Extra credit
+
   def to_a
     arr = []
     return arr if @head.nil?
@@ -85,32 +116,30 @@ class LinkedList
     arr
   end
 
-  def at(idx)
-    return 'No match' if idx > to_a.length
+  def insert_at(value, index)
+    return puts 'Out of range' if index > to_a.size || index.negative?
 
-    search = @head
-    i = 0
-    until i == idx
-      if search.nil?
-        p 'NIL'
-      end
-      search = search.next_node
-      i += 1
+    if index.zero?
+      prepend(value)
+    elsif index == to_a.size
+      append(value)
+    else
+      next_node = at(index)
+      prev_node = at(index - 1)
+      new_node = Node.new(value)
+      prev_node.next_node = new_node
+      new_node.next_node = next_node
     end
-    search.value
   end
 
-  def find(value)
-    search = @head
-    i = 0
-    exist = false
-    until search.nil?
-      exist = true if search.value == value
-      search = search.next_node
+  def remove_at(index)
+    return puts 'Out of range' if to_a.size - 1 < index
 
-      i += 1 unless exist == true
+    if index.zero?
+      @head = @head.next_node
+    else
+      at(index - 1).next_node = at(index - 1).next_node.next_node
     end
-    return i if exist == true
   end
 end
 
@@ -125,25 +154,21 @@ end
 
 li = LinkedList.new
 
-li.prepend(30)
 li.append(1)
 li.append(2)
-li.prepend(10)
 li.append(3)
 li.append(4)
 li.append(5)
-li.append('bob')
-li.prepend('john')
-li.prepend(1.1)
-li.append(%w[1 2 3 4])
+li.append(6)
+li.append(7)
+li.prepend('bubina')
 
-p li.head.value
-p li.head.next_node.value
-p li.find(4)
-p li.size
+li.at(0)
 li.to_s
-li.to_a
-li.pop
 p li.to_a
-
-p li.at(10)
+li.pop
+li.insert_at(99, 3)
+p li.to_a
+p li.find('bubina')
+li.remove_at(3)
+p li.to_a
