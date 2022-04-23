@@ -31,7 +31,7 @@ Extra Credit
 
 This project was quite challenging, new conceps and ways to tangle the code, but when I figure out how the Node.new worked evething makes sense.
 
-The bonus challange also was challenging and i took some time to figure out.
+The bonus challange also was challenging and I took some time to figure out.
 
 ------------
 
